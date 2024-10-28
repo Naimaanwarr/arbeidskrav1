@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {createRoot} from "react-dom/client";
 
 const root = createRoot(document.getElementById('root'));
@@ -32,9 +32,22 @@ function LibraryApplication() {
 
     const [books, setBooks] = useState([])
 
-    async function handleNewBook(book) {
-        setBooks(prevBooks => [...prevBooks, book]);
 
+    async function loadLibrary(){
+        const res = await fetch("/api/books");
+        if (res.ok){
+           setBooks( await res.json());
+        }
+        else{
+            console.log("error occured");
+        }
+    }
+
+    useEffect(() => {
+        loadLibrary();
+    }, [])
+
+    async function handleNewBook(book) {
         await fetch("/api/books", {
             method: "POST",
             headers:{
@@ -42,6 +55,7 @@ function LibraryApplication() {
             },
             body: JSON.stringify(book),
         })
+        await loadLibrary();
 
     }
 

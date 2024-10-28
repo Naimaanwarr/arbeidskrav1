@@ -1,14 +1,24 @@
 import express from "express";
 
 const app = express();
+app.use(express.json());
+
+const tasks = [{
+    title: "the book from the server"
+}];
 
 app.get("/api/books", (req, res) => {
-    res.send([{
-        title: "the book form the server"
-    }])
+    res.send(tasks)
+})
+
+app.post("/api/books", (req, res) => {
+    const {title} = req.body;
+    const book = {title}
+    tasks.push(book);
+    res.send(200);
 })
 
 
-
-
 app.listen(3000);
+
+
