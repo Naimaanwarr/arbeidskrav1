@@ -18,6 +18,7 @@ app.post("/api/books", (req, res) => {
     res.send(200);
 })
 
+app.use(express.static("../client/dist"));
 
 app.listen(process.env.PORT || 3000);
 
