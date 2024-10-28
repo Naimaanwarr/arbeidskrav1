@@ -9,7 +9,8 @@ function BookForm({onNewBook}) {
 
     function handleNewAdd(e) {
         e.preventDefault();
-        onNewBook({title})
+        const book ={title};
+        onNewBook({title});
         setTitle("");
     }
 
@@ -31,20 +32,34 @@ function LibraryApplication() {
 
     const [books, setBooks] = useState([])
 
-    function handleNewBook(book) {
+    async function handleNewBook(book) {
         setBooks(prevBooks => [...prevBooks, book]);
+
+        await fetch("/api/books", {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(book),
+        })
+
     }
+
+
 
     return <>
         <h1>Books I want to read</h1>
 
-        <ul>
-            {books.map((book) => (<li>{book.title}</li>))}
-        </ul>
+            {books.map((book, index) => (
+                <div key={index}>
+                    <input type="checkbox"/>
+                    {book.title}
+                </div>
+            ))}
 
-        <BookForm onNewBook={handleNewBook} />
+        <BookForm onNewBook={handleNewBook}/>
 
-        </>;
+    </>;
 }
 
-root.render(<LibraryApplication  />)
+root.render(<LibraryApplication/>)
